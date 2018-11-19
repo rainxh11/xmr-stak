@@ -1,0 +1,43 @@
+# image
+image: Visual Studio 2017 
+
+# For CUDA Enabled use image: Previous Visual Studio 2017 
+#image: Previous Visual Studio 2017 
+
+# build platform
+platform: x64
+
+# clone directory
+clone_folder: c:\xmr-stak
+
+# Uncomment for CUDA Enabled Build
+install:
+  #- appveyor DownloadFile  https://developer.download.nvidia.com/compute/cuda/10.0/secure/Prod/network_installers/cuda_10.0.130_win10_network.exe?-cHUQ1ql83sYn09lv9lb3Yki2nQi6ZVS-Q_CzDXLKB1WunlwxxYe6wqYwFj4IKarFo8UkZdA4nCvYntnEm8gRktQsjG0kSxl2HNS-FHV8LyQk-_dLX0ou5nLTcMcIDJxLDR-D61lR_Hd_sjWh-775tcCn9YuMpZLrPGEubzclwobCZGFlNiSWJLZMDS7mho -FileName cuda_10.0.130_win10_network.exe
+  #- cuda_10.0.130_win10_network.exe -s nvcc_10 cudart_10
+  #- set PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.0\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.0\libnvvp;%PATH%
+  #- nvcc -V
+
+build_script:
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 -vcvars_ver=14.11  
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsMSBuildCmd.bat"
+  - cd c:\xmr-stak
+  - mkdir build
+  - cd build
+  - set CMAKE_PREFIX_PATH=..\hwloc
+  - cmake -G "Visual Studio 15 2017 Win64" -T host=x64 .. -DHWLOC="..\hwloc\lib\libhwloc.lib" -DHWLOC_INCLUDE_DIR="..\hwloc\include" -DOpenCL_INCLUDE_DIR="..\openclamd\include" -DOpenCL_LIBRARY="..\openclamd\lib\OpenCL.lib"  -DCUDA_ENABLE=OFF
+  - cmake --build . --config Release --target install
+  
+after_build:
+- ps: | # package artifacts
+    7z a -m0=LZMA2 -mx9 c:\xmr-stak\xmr-stak-2.4.4.7z c:\xmr-stak\build\bin\Release\*.exe c:\xmr-stak\build\bin\Release\*.dll
+
+artifacts:
+- path: xmr-stak-2.4.4.7z
+  name: xmr-stak-2.4.4
+
+  
+test_script:
+  - cd c:\xmr-stak\build\bin\Release
+  - dir
+  - set XMRSTAK_NOWAIT=1
+  - xmr-stak.exe --help --noUAC
