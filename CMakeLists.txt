@@ -50,7 +50,7 @@ else()
 endif()
 
 # option to add static libgcc and libstdc++
-option(CMAKE_LINK_STATIC "link as much as possible libraries static" OFF)
+option(CMAKE_LINK_STATIC "link as much as possible libraries static" ON)
 
 ################################################################################
 # Find CUDA
@@ -219,7 +219,7 @@ list(APPEND CMAKE_PREFIX_PATH "$ENV{CMAKE_PREFIX_PATH}")
 # Find OpenCL
 ###############################################################################
 
-option(OpenCL_ENABLE "Enable or disable OpenCL spport (AMD GPU support)" ON)
+option(OpenCL_ENABLE "Enable or disable OpenCL spport (AMD GPU support)" OFF)
 if(OpenCL_ENABLE)
     # try to find AMD OpenCL before NVIDIA OpenCL
     find_path(OpenCL_INCLUDE_DIR
@@ -291,7 +291,7 @@ endif()
 # Find microhttpd
 ################################################################################
 
-option(MICROHTTPD_ENABLE "Enable or disable the requirement of microhttp (http daemon)" ON)
+option(MICROHTTPD_ENABLE "Enable or disable the requirement of microhttp (http daemon)" OFF)
 if(MICROHTTPD_ENABLE)
     find_path(MTHD_INCLUDE_DIR
         NAMES
@@ -327,7 +327,7 @@ endif()
 # Find OpenSSL
 ###############################################################################
 
-option(OpenSSL_ENABLE "Enable or disable the requirement of OpenSSL" ON)
+option(OpenSSL_ENABLE "Enable or disable the requirement of OpenSSL" OFF)
 if(OpenSSL_ENABLE)
     find_package(OpenSSL)
     if(OPENSSL_FOUND)
