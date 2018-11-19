@@ -29,11 +29,11 @@ build_script:
   
 after_build:
 - ps: | # package artifacts
-    7z a -m0=LZMA2 -mx9 c:\xmr-stak\xmr-stak-2.4.4.7z c:\xmr-stak\build\bin\Release\*.exe c:\xmr-stak\build\bin\Release\*.dll
+    7z a -m0=LZMA2 -mx9 c:\xmr-stak\xmr-stak.7z c:\xmr-stak\build\bin\Release\*.exe c:\xmr-stak\build\bin\Release\*.dll
 
 artifacts:
-- path: xmr-stak-2.4.4.7z
-  name: xmr-stak-2.4.4
+- path: xmr-stak.7z
+  name: xmr-stak
 
   
 test_script:
